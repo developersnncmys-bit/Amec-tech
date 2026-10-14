@@ -25,6 +25,14 @@ export function Header() {
   }, [pathname]);
 
   useEffect(() => {
+    // Timeline uses a long pinned scroll gesture to cycle through years — hiding
+    // the navbar there would strand the user inside the pin with no way to
+    // navigate out. Keep it visible for the entire page.
+    if (pathname === "/timeline") {
+      setHidden(false);
+      return;
+    }
+
     lastScrollY.current = window.scrollY;
     // Small threshold prevents flicker on tiny scroll jitters (trackpads,
     // inertia bounces) — require ~6px of movement to count as a direction.

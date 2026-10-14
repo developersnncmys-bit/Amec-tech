@@ -111,9 +111,9 @@ export function Footer() {
           <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <span>All Rights Reserved</span>
             <span aria-hidden className="text-white/25">|</span>
-            <Link href="/terms" className="transition-colors hover:text-white">Terms and Conditions</Link>
+            <Link href="/terms-of-service" className="transition-colors hover:text-white">Terms and Conditions</Link>
             <span aria-hidden className="text-white/25">|</span>
-            <Link href="/privacy" className="transition-colors hover:text-white">Privacy Policy</Link>
+            <Link href="/privacy-policy" className="transition-colors hover:text-white">Privacy Policy</Link>
           </p>
         </div>
       </div>
