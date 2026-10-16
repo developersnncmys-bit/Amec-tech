@@ -115,8 +115,8 @@ export function IndustriesCarousel() {
   };
 
   return (
-    <section className="flex flex-col pb-20 pt-14 md:pb-28 md:pt-20">
-      <div className="mx-auto w-full max-w-[1464px] px-6 md:px-14">
+    <section className="flex flex-col pb-20 pt-14 tablet:pb-20 tablet:pt-16 md:pb-28 md:pt-20">
+      <div className="mx-auto w-full max-w-[1464px] px-6 tablet:px-8 md:px-14">
         <AnimateIn>
           <div className="flex flex-col items-center gap-4 text-center md:gap-6">
             <h2 className="heading-lg">INDUSTRIES WE SERVE</h2>
@@ -130,7 +130,7 @@ export function IndustriesCarousel() {
       <div className="relative mx-auto mt-14 w-full max-w-[1464px]">
         <div
           ref={trackRef}
-          className="flex cursor-grab snap-x snap-proximity gap-6 overflow-x-auto scroll-smooth px-6 pb-4 md:px-14"
+          className="flex cursor-grab snap-x snap-proximity gap-6 overflow-x-auto scroll-smooth px-6 pb-4 tablet:px-8 md:px-14"
           style={{ scrollbarWidth: "none" }}
         >
           <style jsx>{`

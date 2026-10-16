@@ -448,10 +448,10 @@ function WhoWeAre() {
         </div>
 
         {/* Row 2 — image (left, pulled up) + body text (right) */}
-        <div className="mt-14 grid gap-10 md:mt-0 md:grid-cols-2 md:items-center md:gap-14">
+        <div className="mt-14 grid gap-10 md:mt-0 md:grid-cols-2 md:items-center md:gap-14 tablet:mt-10">
           <div
             data-who-image
-            className="relative aspect-[16/11] overflow-hidden rounded bg-bg-card md:-mt-56"
+            className="relative aspect-[16/11] overflow-hidden rounded bg-bg-card tablet:mt-0 md:-mt-56"
           >
             <Image
               src="/about/left.jpg"
@@ -719,7 +719,7 @@ function OurStory() {
             Col 4 — BIG image on top (flex-1), SMALL image below (fixed height) */}
         <div
           data-story-collage
-          className="hidden gap-5 md:grid md:grid-cols-4"
+          className="hidden gap-5 md:grid md:grid-cols-4 tablet:hidden"
           style={{ minHeight: "720px" }}
         >
           {/* Col 1 — OUR STORY text block + 480px portrait directly below.
@@ -860,7 +860,7 @@ function OurStory() {
         </div>
 
         {/* Mobile fallback — simple stacked layout */}
-        <div className="flex flex-col gap-10 md:hidden">
+        <div className="flex flex-col gap-10 md:hidden tablet:flex">
           <div>
             <h2 className="heading-lg">OUR STORY</h2>
             <p className="mt-6 font-sans text-sm leading-relaxed text-white/80">
@@ -937,7 +937,7 @@ function VisionAndDirection() {
   return (
     <section
       ref={sectionRef}
-      className="relative isolate flex min-h-[720px] w-full items-center justify-center overflow-hidden py-16 md:min-h-screen md:py-24"
+      className="relative isolate flex min-h-[720px] w-full items-center justify-center overflow-hidden py-16 tablet:min-h-[640px] tablet:py-16 md:min-h-screen md:py-24"
     >
       {/* Full-bleed background image */}
       <div
@@ -1097,7 +1097,7 @@ function MeetFounders() {
             {/* Bottom-left founder tag */}
             <div
               data-founder-tag
-              className="absolute bottom-6 left-6 flex flex-col gap-2 md:bottom-10 md:left-10"
+              className="hidden md:absolute md:bottom-10 md:left-10 md:flex md:flex-col md:gap-2"
             >
               <p className="font-display text-lg font-semibold text-white md:text-xl">
                 {FOUNDERS[0].name}
@@ -1117,7 +1117,7 @@ function MeetFounders() {
             {/* Bottom-right founder tag */}
             <div
               data-founder-tag
-              className="absolute bottom-6 right-6 flex flex-col items-end gap-2 md:bottom-10 md:right-10"
+              className="hidden md:absolute md:bottom-10 md:right-10 md:flex md:flex-col md:items-end md:gap-2"
             >
               <p className="font-display text-lg font-semibold text-white md:text-xl">
                 {FOUNDERS[1].name}
@@ -1125,6 +1125,38 @@ function MeetFounders() {
               <p className="text-sm text-white/70 md:text-[15px]">
                 {FOUNDERS[1].role}
               </p>
+              <a
+                href={FOUNDERS[1].linkedin}
+                aria-label={`${FOUNDERS[1].name} on LinkedIn`}
+                className="mt-1 inline-flex h-7 w-7 items-center justify-center text-white/80 transition hover:text-white"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
+
+          {/* Mobile — tags flow below the image as a 2-col grid so names and
+              roles don't collide the way they do when absolute-overlaid on a
+              narrow card. Hidden on md+ where the desktop overlay above kicks in. */}
+          <div className="mt-5 grid grid-cols-2 gap-4 md:hidden">
+            <div data-founder-tag className="flex flex-col gap-1">
+              <p className="font-display text-base font-semibold text-white">
+                {FOUNDERS[0].name}
+              </p>
+              <p className="text-xs text-white/70">{FOUNDERS[0].role}</p>
+              <a
+                href={FOUNDERS[0].linkedin}
+                aria-label={`${FOUNDERS[0].name} on LinkedIn`}
+                className="mt-1 inline-flex h-7 w-7 items-center justify-center text-white/80 transition hover:text-white"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+            </div>
+            <div data-founder-tag className="flex flex-col items-end gap-1 text-right">
+              <p className="font-display text-base font-semibold text-white">
+                {FOUNDERS[1].name}
+              </p>
+              <p className="text-xs text-white/70">{FOUNDERS[1].role}</p>
               <a
                 href={FOUNDERS[1].linkedin}
                 aria-label={`${FOUNDERS[1].name} on LinkedIn`}
@@ -1581,7 +1613,7 @@ function OurClients() {
 
           <div
             data-clients-grid
-            className="grid w-full max-w-[1100px] grid-cols-3 justify-self-end gap-3 md:grid-cols-4 md:gap-4"
+            className="grid w-full max-w-[1100px] grid-cols-3 justify-self-end gap-3 md:grid-cols-4 md:gap-4 tablet:grid-cols-3 tablet:gap-3"
           >
             {CLIENT_LOGOS.map((c) => (
               <div

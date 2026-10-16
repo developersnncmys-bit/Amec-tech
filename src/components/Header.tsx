@@ -84,7 +84,7 @@ export function Header() {
           </div>
 
           <nav
-            className="hidden items-center gap-8 md:flex lg:gap-10"
+            className="hidden items-center gap-8 md:flex lg:gap-10 tablet:gap-5"
             aria-label="Primary"
           >
             {NAV.map((item) => {
@@ -94,7 +94,7 @@ export function Header() {
                   <span
                     key={item.href}
                     aria-disabled="true"
-                    className="cursor-default font-display text-sm font-medium text-white/70 lg:text-base"
+                    className="cursor-default whitespace-nowrap font-display text-sm font-medium text-white/70 lg:text-base"
                   >
                     {item.label}
                   </span>
@@ -107,7 +107,7 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`font-display text-sm font-medium transition-colors lg:text-base ${cls}`}
+                  className={`whitespace-nowrap font-display text-sm font-medium transition-colors lg:text-base ${cls}`}
                 >
                   {item.label}
                 </Link>

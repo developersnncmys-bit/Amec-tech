@@ -155,7 +155,7 @@ export default function HomePage() {
 
 function Shell({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`mx-auto w-full max-w-[1440px] px-6 md:px-14 ${className}`}>
+    <div className={`mx-auto w-full max-w-[1440px] px-6 tablet:px-8 md:px-14 ${className}`}>
       {children}
     </div>
   );
@@ -204,7 +204,7 @@ function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative isolate h-screen min-h-[640px] w-full overflow-hidden bg-[#0a0a0a]"
+      className="relative isolate h-screen min-h-[560px] w-full overflow-hidden bg-[#0a0a0a] md:min-h-[640px]"
     >
       <div data-hero-bg aria-hidden className="absolute inset-0">
         <video
@@ -227,7 +227,7 @@ function Hero() {
         />
       </div>
 
-      <div className="relative flex h-full w-full items-end px-6 pb-16 md:px-14 md:pb-20">
+      <div className="relative flex h-full w-full items-end px-6 pb-16 tablet:px-8 tablet:pb-16 md:px-14 md:pb-20">
         <div className="flex w-full flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
           <div className="max-w-3xl">
             <h1
@@ -308,7 +308,7 @@ function Intro() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full py-20 md:py-28">
+    <section ref={sectionRef} className="w-full py-20 tablet:py-20 md:py-28">
       <Shell>
         <p className="mx-auto max-w-3xl text-center font-display text-lg leading-[1.6] text-white md:text-[22px]">
           {INTRO_WORDS.map((word, i) => (
@@ -381,7 +381,7 @@ function Founders() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full py-20 md:py-28">
+    <section ref={sectionRef} className="w-full py-20 tablet:pt-28 tablet:pb-10 md:py-28">
       <Shell>
         <div className="text-center">
           <h2
@@ -399,12 +399,49 @@ function Founders() {
           </p>
         </div>
 
+        {/* Mobile + small-tablet (<1024px) — stacked founder cards + quote.
+            iPad Pro 11/13 (≥1024px) get the side-by-side overlay below. */}
+        <div className="mt-10 flex flex-col gap-6 lg:hidden">
+          {FOUNDERS.map((f) => (
+            <div
+              key={f.name}
+              data-founder-card
+              className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]"
+            >
+              <img
+                src={f.photo}
+                alt={f.name}
+                className="h-[420px] w-full object-cover object-top grayscale"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
+              <div className="flex items-start gap-2 border-t border-white/10 bg-black/80 px-5 py-4">
+                <span aria-hidden className="mt-1 text-white/50">*</span>
+                <div>
+                  <p className="font-display text-base font-semibold text-white">
+                    {f.name}
+                  </p>
+                  <p className="mt-1 text-xs text-white/60">{f.role}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+          <blockquote
+            data-founder-quote
+            className="mt-2 text-center font-sans text-lg font-normal italic leading-snug text-[#FFFFFF8C]"
+          >
+            <span>&ldquo;</span>True leadership begins where comfort ends
+            <span>&rdquo;</span>
+          </blockquote>
+        </div>
+
         <div
           data-founder-card
-          className="relative mx-auto mt-14 w-full max-w-4xl overflow-hidden md:mt-20"
+          className="relative mx-auto mt-14 hidden w-full max-w-4xl overflow-hidden md:mt-20 lg:block"
         >
           {/* Side-by-side founder images with a wide gap for the quote */}
-          <div className="grid grid-cols-2 gap-12 md:gap-[340px]">
+          <div className="grid grid-cols-2 gap-12 md:gap-[340px] lg:gap-32 xl:gap-[340px]">
             <img
               src={FOUNDERS[0].photo}
               alt={FOUNDERS[0].name}
@@ -562,12 +599,12 @@ function TimelineBlock() {
         {/* All years share the same base size — size + brightness driven by
             scrub timeline (scale + autoAlpha). Active year scales to 1 and
             goes fully white; others shrink to 0.65 and fade to 15% alpha. */}
-        <div className="flex items-center justify-center gap-6 md:gap-12">
+        <div className="flex items-center justify-center gap-3 min-[400px]:gap-5 sm:gap-8 tablet:gap-8 md:gap-12">
           {TIMELINE_STEPS.map((s) => (
             <span
               key={s.year}
               data-year
-              className="font-display text-[72px] font-semibold leading-none tabular-nums text-white md:text-[120px]"
+              className="font-display text-[42px] font-semibold leading-none tabular-nums text-white min-[400px]:text-[56px] sm:text-[72px] tablet:text-[88px] md:text-[120px]"
             >
               {s.year}
             </span>
@@ -706,9 +743,9 @@ function Ecosystem() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex h-screen w-full flex-col overflow-hidden"
+      className="relative flex h-screen w-full flex-col overflow-hidden tablet:justify-start tablet:pt-56"
     >
-      <Shell className="pt-20 pb-10 md:pt-24 md:pb-16">
+      <Shell className="pt-14 pb-6 tablet:pt-16 tablet:pb-12 md:pt-24 md:pb-16">
         <div data-eco-head className="text-center">
           <h2 className="heading-lg">OUR ECOSYSTEM</h2>
           <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-white/55 md:text-[18px] md:leading-[1.55]">
@@ -722,20 +759,20 @@ function Ecosystem() {
       {/* Horizontal rail — pinned & scrubbed by ScrollTrigger. The rail
           fills the remaining viewport height so each card fits on-screen with
           its chips, image, and Explore button all visible at once. */}
-      <div className="flex flex-1 items-center pb-12 md:pb-16">
+      <div className="flex flex-1 items-center pb-6 md:pb-16 tablet:flex-none tablet:pb-0 tablet:pt-4">
         <div
           ref={trackRef}
-          className="flex gap-7 pl-6 pr-6 md:pl-14 md:pr-14"
+          className="flex gap-4 pl-6 pr-6 md:gap-7 md:pl-14 md:pr-14"
           style={{ willChange: "transform" }}
         >
           {ECOSYSTEM.map((e) => (
             <article
               key={e.tag}
               data-eco-card
-              className="group relative grid h-[min(520px,calc(100vh-320px))] w-[min(88vw,1100px)] shrink-0 overflow-hidden rounded-[12px] border border-[#333333] bg-transparent md:grid-cols-[1fr_1.1fr]"
+              className="group relative grid h-[min(500px,calc(100vh-200px))] w-[min(88vw,1100px)] shrink-0 overflow-hidden rounded-[12px] border border-[#333333] bg-transparent md:h-[min(520px,calc(100vh-320px))] md:grid-cols-[1fr_1.1fr]"
             >
               {/* LEFT — text column */}
-              <div className="flex flex-col justify-between gap-6 p-6 md:p-10">
+              <div className="flex flex-col justify-between gap-5 p-5 md:gap-6 md:p-10">
                 <div>
                   <p className="font-display text-3xl font-semibold uppercase tracking-wide text-white md:text-[40px]">
                     {e.tag}
@@ -772,7 +809,7 @@ function Ecosystem() {
               </div>
 
               {/* RIGHT — image column */}
-              <div className="relative min-h-[260px] overflow-hidden md:min-h-full">
+              <div className="relative min-h-[180px] overflow-hidden md:min-h-full">
                 <Image
                   src={e.image}
                   alt={e.title}
@@ -841,8 +878,8 @@ function WhyAmecGroup() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative w-full py-16 md:py-24">
-      <div className="mx-auto w-full max-w-[1400px] px-6 md:px-10 lg:px-14">
+    <section ref={sectionRef} className="relative w-full py-16 tablet:py-16 md:py-24">
+      <div className="mx-auto w-full max-w-[1400px] px-6 tablet:px-8 md:px-10 lg:px-14">
         {/* Header */}
         <div className="text-center">
           <h2 data-why-heading className="heading-lg">
@@ -858,11 +895,13 @@ function WhyAmecGroup() {
           </p>
         </div>
 
-        {/* Desktop: pinned showcase */}
-        <div className="mt-20 hidden lg:grid lg:grid-cols-[1.05fr_1fr] lg:gap-16 xl:gap-24">
+        {/* Desktop (xl+): pinned showcase. Hidden at <1280px since the
+            scroll-driven image swap doesn't read well when the whole section
+            fits in one viewport — tablet uses the stacked card layout below. */}
+        <div className="mt-20 hidden xl:grid xl:grid-cols-[1.05fr_1fr] xl:gap-16 2xl:gap-24">
           {/* Left — sticky stage */}
           <div className="relative">
-            <div className="sticky top-24 h-[72vh] overflow-hidden rounded-card border border-white/[0.08] bg-bg-card">
+            <div className="sticky top-24 h-[72vh] max-h-[620px] overflow-hidden rounded-card border border-white/[0.08] bg-bg-card">
               {WHY_POINTS.map((p, i) => (
                 <div
                   key={p.id}
@@ -915,8 +954,9 @@ function WhyAmecGroup() {
           </div>
         </div>
 
-        {/* Mobile: stacked cards */}
-        <div className="mt-14 flex flex-col gap-8 lg:hidden">
+        {/* Mobile + tablet: stacked cards (image + text per card). The pinned
+            scroll showcase only kicks in at xl: (≥1280px). */}
+        <div className="mt-14 flex flex-col gap-8 xl:hidden">
           {WHY_POINTS.map((p) => (
             <article
               key={p.id}
@@ -984,7 +1024,7 @@ function BuildTheFuture() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full py-20 md:py-28">
+    <section ref={sectionRef} className="w-full py-20 tablet:py-20 md:py-28">
       <Shell>
         <div className="text-center">
           <h2
@@ -1011,7 +1051,7 @@ function BuildTheFuture() {
               key={c.title}
               href={c.href}
               data-build-card
-              className="group relative flex min-h-[460px] flex-col justify-end overflow-hidden rounded-[8px] border border-white/[0.06] md:min-h-[520px]"
+              className="group relative flex min-h-[460px] flex-col justify-end overflow-hidden rounded-[8px] border border-white/[0.06] tablet:min-h-[440px] md:min-h-[520px]"
             >
               <div
                 aria-hidden
@@ -1210,7 +1250,7 @@ function ClosingCTA() {
       </div>
 
       {/* Two action cards below the pinned band */}
-      <Shell className="pb-20 pt-10 md:pb-28">
+      <Shell className="pb-20 pt-10 tablet:pb-20 md:pb-28">
         <div
           data-close-grid
           className="grid gap-5 md:grid-cols-2 md:gap-6"

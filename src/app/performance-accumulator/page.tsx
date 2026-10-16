@@ -336,7 +336,7 @@ function CapacityBand() {
       </span>
 
       <Shell>
-        <div className="relative grid gap-10 md:grid-cols-[0.95fr_1.05fr] md:items-center md:gap-16">
+        <div className="relative grid gap-10 md:grid-cols-[0.95fr_1.05fr] md:items-center md:gap-16 tablet:grid-cols-1 tablet:gap-10">
           {/* LEFT — stat + description + supporting specs */}
           <div className="relative">
             {/* Thin vertical accent rail on the far left of the content */}
@@ -466,7 +466,7 @@ function HighPerformanceSystem() {
           HIGH PERFORMANCE BATTERY SYSTEM
         </h2>
 
-        <div className="mt-12 grid gap-10 md:mt-16 md:grid-cols-[1fr_1.1fr_1fr] md:items-center md:gap-10">
+        <div className="mt-12 grid gap-10 md:mt-16 md:grid-cols-[1fr_1.1fr_1fr] md:items-center md:gap-10 tablet:grid-cols-1 tablet:gap-10">
           {/* LEFT features */}
           <div className="flex flex-col gap-14 md:gap-16 md:text-right">
             {leftFeatures.map((f) => (
@@ -554,7 +554,7 @@ function EfficiencyBand() {
 
       {/* Bottom — two-column: 30% number + caption LEFT, image RIGHT */}
       <Shell className="py-16 md:py-24">
-        <div className="grid items-center gap-10 md:grid-cols-[1fr_1.6fr] md:gap-14">
+        <div className="grid items-center gap-10 md:grid-cols-[1fr_1.6fr] md:gap-14 tablet:grid-cols-1 tablet:gap-10">
           <div>
             <div data-eff-number className="flex items-start leading-none">
               <span className="font-sans text-7xl font-medium leading-none text-white md:text-[180px]">
@@ -703,7 +703,7 @@ function EngineeredForPerformance() {
       <Shell className="relative">
         <div data-eng-list>
           <div data-eng-rule className="h-px w-full bg-white/20" />
-          <div className="grid grid-cols-2 gap-x-6 gap-y-10 pt-8 md:grid-cols-5 md:gap-x-10 md:pt-10">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 pt-8 md:grid-cols-5 md:gap-x-10 md:pt-10 tablet:grid-cols-3 tablet:gap-x-6">
             {ENGINEERING_STEPS.map((step) => (
               <div key={step.id} data-eng-step>
                 <span

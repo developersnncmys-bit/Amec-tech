@@ -197,7 +197,7 @@ function Hero() {
       {/* Content — title left, description right, CTA under title */}
       <div className="relative flex h-full items-center">
         <Shell>
-          <div className="grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-center md:gap-16">
+          <div className="grid gap-10 md:grid-cols-[1.1fr_1fr] md:items-center md:gap-16 tablet:grid-cols-1 tablet:gap-10">
             {/* LEFT — title + CTA */}
             <div>
               <h1 data-hero-title className="heading-xl md:!text-[68px] md:!leading-[1.06]">
@@ -263,7 +263,7 @@ function ContactChannels() {
   return (
     <section ref={sectionRef} className="w-full py-16 md:py-20">
       <Shell>
-        <div className="grid gap-5 md:grid-cols-3 md:gap-6">
+        <div className="grid gap-5 md:grid-cols-3 md:gap-6 tablet:grid-cols-2 tablet:gap-5">
           {CONTACT_CHANNELS.map((c) => (
             <article
               key={c.title}
@@ -344,7 +344,7 @@ function HiringHR() {
   return (
     <section ref={sectionRef} className="w-full py-12 md:py-16">
       <Shell>
-        <div className="grid gap-8 border-y border-white/[0.08] py-10 md:grid-cols-[1fr_1fr] md:items-center md:gap-16 md:py-14">
+        <div className="grid gap-8 border-y border-white/[0.08] py-10 md:grid-cols-[1fr_1fr] md:items-center md:gap-16 md:py-14 tablet:grid-cols-1 tablet:gap-8">
           <div data-hiring-item>
             <h2 className="font-display text-2xl font-semibold text-white md:text-3xl">
               Hiring & HR Support
@@ -357,7 +357,7 @@ function HiringHR() {
           <form
             data-hiring-item
             onSubmit={onSubmit}
-            className="flex w-full items-center gap-3 rounded-2xl border border-white/15 bg-black px-4 py-4 transition-colors hover:border-white/30 focus-within:border-white/40 sm:gap-4 sm:px-6 md:ml-auto md:max-w-md"
+            className="flex w-full items-center gap-3 rounded-2xl border border-white/15 bg-black px-4 py-4 transition-colors hover:border-white/30 focus-within:border-white/40 sm:gap-4 sm:px-6 md:ml-auto md:max-w-md tablet:ml-0 tablet:max-w-none"
           >
             <span className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-white sm:text-sm sm:tracking-[0.18em] md:text-base">
               Email
@@ -435,7 +435,7 @@ function WhereWeAre() {
 
         <div
           data-wwa-grid
-          className="mt-12 grid gap-6 md:mt-16 md:grid-cols-2 md:gap-8"
+          className="mt-12 grid gap-6 md:mt-16 md:grid-cols-2 md:gap-8 tablet:grid-cols-1 tablet:gap-6"
         >
           {LOCATIONS.map((loc) => (
             <article
@@ -575,7 +575,7 @@ function JustSendIt() {
     >
       <Shell>
         <div className="overflow-hidden rounded-card border border-white/[0.08]">
-          <div className="grid md:grid-cols-[1fr_1.3fr]">
+          <div className="grid md:grid-cols-[1fr_1.3fr] tablet:grid-cols-1">
             {/* LEFT — lighter card bg; title sits lower in the column; info blocks + buttons grouped at the bottom */}
             <div data-jsi-left className="flex flex-col bg-bg-card p-7 md:p-12 lg:p-16">
               <h2 className="mt-24 font-display font-semibold normal-case tracking-normal text-white text-[52px] leading-[1.05] md:mt-40 md:text-[72px]">

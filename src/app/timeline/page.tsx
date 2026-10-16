@@ -210,6 +210,29 @@ function TimelineSection() {
         }}
       />
 
+      {/* Mobile — horizontal year nav strip at the top. Desktop uses the
+          sidebar below. */}
+      <div className="absolute inset-x-0 top-24 z-10 flex items-center justify-center gap-5 overflow-x-auto px-6 md:hidden">
+        {SIDEBAR_YEARS.map((y) => {
+          const isActive = y === activeYear;
+          return (
+            <button
+              key={y}
+              type="button"
+              onClick={() => {
+                const idx = SLIDES.findIndex((s) => s.year === y);
+                if (idx !== -1) setActive(idx);
+              }}
+              className={`shrink-0 font-display text-sm font-semibold tabular-nums transition-colors ${
+                isActive ? "text-white" : "text-white/40"
+              }`}
+            >
+              {y}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Layout — sidebar on the left, slide content fills the rest */}
       <div className="relative mx-auto flex h-full w-full max-w-[1600px] px-6 md:px-14">
         {/* Sidebar — year navigation */}
@@ -242,7 +265,7 @@ function TimelineSection() {
           className={`flex flex-1 ${
             slide.kind === "intro"
               ? "items-center"
-              : "items-center md:items-start md:pt-[32vh]"
+              : "items-center md:items-start md:pt-[32vh] tablet:items-center tablet:pt-0"
           }`}
         >
           {slide.kind === "intro" ? (
@@ -330,15 +353,18 @@ function IntroSlide({ year }: { year: string }) {
         </span>
       </div>
 
-      {/* Two overlapping cards sitting to the right of the year */}
-      <div className="pointer-events-none absolute right-0 top-1/2 hidden h-[480px] w-[600px] -translate-y-1/2 md:block">
+      {/* Two overlapping cards sitting to the right of the year on laptop.
+          At tablet the content area (~500px) can't fit year + 600px overlay
+          side-by-side, so the overlay becomes a static block below the year
+          with two smaller cards shown side-by-side. */}
+      <div className="pointer-events-none absolute right-0 top-1/2 hidden h-[480px] w-[600px] -translate-y-1/2 md:block tablet:static tablet:mt-10 tablet:flex tablet:h-auto tablet:w-full tablet:translate-y-0 tablet:items-center tablet:gap-5 xl:h-[380px] xl:w-[480px] 2xl:h-[480px] 2xl:w-[600px]">
         <div
           data-slide-image
-          className="absolute left-0 top-0 h-[300px] w-[300px] bg-[#8b8b8b]"
+          className="absolute left-0 top-0 h-[300px] w-[300px] bg-[#8b8b8b] tablet:static tablet:h-[180px] tablet:w-[180px] xl:h-[240px] xl:w-[240px] 2xl:h-[300px] 2xl:w-[300px]"
         />
         <div
           data-slide-image
-          className="absolute bottom-0 right-0 h-[300px] w-[300px] bg-[#d9d9d9]"
+          className="absolute bottom-0 right-0 h-[300px] w-[300px] bg-[#d9d9d9] tablet:static tablet:h-[180px] tablet:w-[180px] xl:h-[240px] xl:w-[240px] 2xl:h-[300px] 2xl:w-[300px]"
         />
       </div>
     </div>
@@ -360,7 +386,7 @@ function ContentSlide({
   body: string;
 }) {
   return (
-    <div className="grid w-full gap-10 md:grid-cols-[1.2fr_1fr] md:gap-16">
+    <div className="grid w-full gap-10 md:grid-cols-[1.2fr_1fr] md:gap-16 tablet:grid-cols-1 tablet:gap-10">
       {/* LEFT — year + title + body */}
       <div className="max-w-xl">
         <p
@@ -386,12 +412,15 @@ function ContentSlide({
         </p>
       </div>
 
-      {/* RIGHT — single image placeholder */}
-      <div className="relative hidden h-[380px] w-full md:block">
+      {/* RIGHT — single image placeholder.
+          On tablet the grid collapses to 1-col (my earlier `tablet:grid-cols-1`),
+          so switch the inner image from absolute right-aligned to a static,
+          full-width placeholder that flows naturally below the text. */}
+      <div className="relative hidden h-[380px] w-full md:block tablet:h-[280px]">
         <div
           key={`content-img-${title}`}
           data-slide-image
-          className="absolute right-0 top-1/2 h-[380px] w-[400px] -translate-y-1/2 bg-[#8b8b8b]"
+          className="absolute right-0 top-1/2 h-[380px] w-[400px] -translate-y-1/2 bg-[#8b8b8b] tablet:static tablet:h-full tablet:w-full tablet:translate-y-0"
         />
       </div>
     </div>

@@ -232,7 +232,7 @@ function Hero() {
   return (
     <section
       ref={ref}
-      className="relative isolate flex min-h-[72vh] w-full items-center justify-center overflow-hidden bg-[#0a0a0a] pt-24 md:min-h-[80vh] md:pt-32"
+      className="relative isolate flex min-h-[72vh] w-full items-center justify-center overflow-hidden bg-[#0a0a0a] pt-24 tablet:min-h-[70vh] tablet:pt-24 md:min-h-[80vh] md:pt-32"
     >
       <div className="absolute inset-0">
         <video
@@ -383,9 +383,9 @@ function JobDetails() {
   return (
     <section ref={sectionRef} className="w-full bg-[#F2F2F2] py-16 md:py-24">
       <div className="mx-auto w-full max-w-[1280px] px-6 md:px-14">
-        <div className="grid gap-10 md:grid-cols-[1.1fr_1fr] md:gap-14">
-          {/* LEFT — Job meta + collapsible description */}
-          <div>
+        <div className="grid gap-10 md:grid-cols-[1.1fr_1fr] md:gap-x-14 md:gap-y-10 tablet:grid-cols-1 tablet:gap-10">
+          {/* Job meta — top-left on desktop, first on mobile */}
+          <div className="order-1 md:col-start-1 md:row-start-1 tablet:order-1 tablet:col-start-auto tablet:row-start-auto">
             <ul className="space-y-7">
               {JOB.meta.map((m) => (
                 <li key={m.label} data-meta-row>
@@ -398,42 +398,46 @@ function JobDetails() {
                 </li>
               ))}
             </ul>
+          </div>
 
-            <div className="mt-10">
-              <div aria-hidden className="h-px w-full bg-black/15" />
-              <button
-                type="button"
-                aria-expanded={descOpen}
-                onClick={() => setDescOpen((v) => !v)}
-                className="group flex w-full items-center justify-between gap-4 py-5 text-left"
-              >
-                <span className="font-display text-xl font-semibold text-black md:text-2xl">
-                  {descOpen ? "Close Job Description" : "View Job Description"}
-                </span>
-                <ChevronDown
-                  className={`h-5 w-5 shrink-0 text-black transition-transform duration-300 ${
-                    descOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              <div aria-hidden className="h-px w-full bg-black/15" />
+          {/* Collapsible job description — bottom-left on desktop, LAST on
+              mobile (sits below the form per the design). */}
+          <div className="order-3 md:col-start-1 md:row-start-2 md:order-none tablet:order-3 tablet:col-start-auto tablet:row-start-auto">
+            <div aria-hidden className="h-px w-full bg-black/15" />
+            <button
+              type="button"
+              aria-expanded={descOpen}
+              onClick={() => setDescOpen((v) => !v)}
+              className="group flex w-full items-center justify-between gap-4 py-5 text-left"
+            >
+              <span className="font-display text-xl font-semibold text-black md:text-2xl">
+                {descOpen ? "Close Job Description" : "View Job Description"}
+              </span>
+              <ChevronDown
+                className={`h-5 w-5 shrink-0 text-black transition-transform duration-300 ${
+                  descOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+            <div aria-hidden className="h-px w-full bg-black/15" />
 
-              <div
-                ref={descRef}
-                className="overflow-hidden"
-                style={{ height: 0, opacity: 0, display: "none" }}
-              >
-                <div className="space-y-9 pt-8">
-                  {JOB_SECTIONS.map((s, idx) => (
-                    <JobSection key={idx} section={s} />
-                  ))}
-                </div>
+            <div
+              ref={descRef}
+              className="overflow-hidden"
+              style={{ height: 0, opacity: 0, display: "none" }}
+            >
+              <div className="space-y-9 pt-8">
+                {JOB_SECTIONS.map((s, idx) => (
+                  <JobSection key={idx} section={s} />
+                ))}
               </div>
             </div>
           </div>
 
-          {/* RIGHT — Dark application form card */}
-          <div data-form-card className="h-fit rounded-2xl bg-[#111111] p-6 md:p-8 md:sticky md:top-28">
+          {/* RIGHT — Dark application form card. On desktop sits in the right
+              column spanning both rows; on mobile sits between meta and the
+              dropdown (order-2). */}
+          <div data-form-card className="order-2 h-fit rounded-2xl bg-[#111111] p-6 md:col-start-2 md:row-span-2 md:row-start-1 md:order-none md:p-8 md:sticky md:top-28 tablet:static tablet:order-2 tablet:col-start-auto tablet:row-start-auto tablet:row-span-1">
             <form onSubmit={onSubmit} className="flex flex-col gap-5">
               <div data-form-field>
                 <label

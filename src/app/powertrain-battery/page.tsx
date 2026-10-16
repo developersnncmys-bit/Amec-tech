@@ -298,7 +298,7 @@ function Hero() {
       />
 
       {/* Title overlay — left-aligned, vertically centered */}
-      <div className="absolute inset-0 flex flex-col items-start justify-center px-4 text-left md:px-8 lg:px-12">
+      <div className="absolute inset-0 flex flex-col items-start justify-center px-4 text-left md:px-8 lg:px-12 tablet:px-6">
         <h1
           data-hero-title
           className="font-display text-[40px] font-semibold uppercase leading-[1.06] text-white md:text-[68px]"
@@ -400,9 +400,13 @@ function ProductPortfolio() {
         }
       );
 
-      // Pin + translate the card track horizontally. A hold phase at the start
-      // keeps the pinned section still for ~half a viewport of scroll before
-      // the cards begin moving. Counter updates in sync with translate progress.
+      // Pin + translate the card track horizontally — laptop only. Below
+      // 1280px the pin reserves tall vertical scroll (hold + distance) and
+      // leaves the viewport mostly empty under the ~490px of content on tall
+      // iPads. Tablets fall through to native horizontal swipe on the rail.
+      const isDesktop = window.matchMedia("(min-width: 1280px)").matches;
+      if (!isDesktop) return;
+
       const getDistance = () =>
         Math.max(0, track.scrollWidth - window.innerWidth + 48);
       const getHold = () => window.innerHeight * 0.5;
@@ -471,10 +475,10 @@ function ProductPortfolio() {
         </div>
       </Shell>
 
-      <div className="relative mt-8">
+      <div className="relative mt-8 tablet:overflow-x-auto tablet:[-ms-overflow-style:none] tablet:[scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div
           ref={trackRef}
-          className="flex gap-6 pl-6 pr-6 will-change-transform md:pl-14 md:pr-14"
+          className="flex gap-6 pl-6 pr-6 will-change-transform md:pl-14 md:pr-14 tablet:snap-x tablet:snap-mandatory"
         >
           {PRODUCTS.map((p) => (
             <article
@@ -573,8 +577,11 @@ function SystemArchitecture() {
   return (
     <section ref={sectionRef} className="relative flex min-h-screen w-full items-center py-20 md:py-24">
       <Shell>
-        <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-center md:gap-16">
-          {/* LEFT — eyebrow, title, description, numbered tab list */}
+        <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-center md:gap-16 tablet:grid-cols-1 tablet:gap-10">
+          {/* LEFT — eyebrow, title, description, numbered tab list.
+              On mobile, image comes first (via `order-first md:order-none`
+              on the image container) so the user sees the image swap as
+              the pin cycles through tabs. */}
           <div className="flex flex-col">
             <h2 data-sa-title className="heading-lg">
               SYSTEM<br />ARCHITECTURE
@@ -637,7 +644,7 @@ function SystemArchitecture() {
           {/* RIGHT — crossfading image stage, no container */}
           <div
             data-sa-image
-            className="relative aspect-[4/3] w-full"
+            className="relative aspect-[4/3] w-full order-first md:order-none"
           >
             {ARCHITECTURE_TABS.map((tab) => {
               const isActive = tab.id === active;
@@ -692,7 +699,7 @@ function ApplicationsBand() {
   return (
     <section ref={sectionRef} className="w-full py-20 md:py-24">
       <Shell>
-        <div className="grid gap-6 md:grid-cols-2 md:grid-rows-2 md:gap-6">
+        <div className="grid gap-6 md:grid-cols-2 md:grid-rows-2 md:gap-6 tablet:grid-cols-1 tablet:grid-rows-none">
           {/* Top-left — title + description (text block, no card) */}
           <div className="flex flex-col justify-start">
             <h2 data-apps-title className="heading-lg">
@@ -851,7 +858,7 @@ function TechnicalCapabilities() {
         </div>
 
         {/* Editorial grid — no cards, pure typography with thin top rules */}
-        <div className="mt-12 grid gap-x-8 gap-y-12 md:mt-20 md:grid-cols-3 md:gap-x-14 md:gap-y-16">
+        <div className="mt-12 grid gap-x-8 gap-y-12 md:mt-20 md:grid-cols-3 md:gap-x-14 md:gap-y-16 tablet:grid-cols-2 tablet:gap-x-8 tablet:gap-y-12">
           {CAPABILITIES.map((c) => (
             <article
               key={c.title}

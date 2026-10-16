@@ -422,7 +422,7 @@ function FeaturedProjects() {
 
         <div
           data-oem-project-grid
-          className="mt-14 grid gap-6 md:mt-20 md:grid-cols-3"
+          className="mt-14 grid gap-6 md:mt-20 md:grid-cols-3 tablet:grid-cols-1 tablet:gap-8"
         >
           {FEATURED_PROJECTS.map((p) => (
             <article
@@ -492,10 +492,14 @@ function EngineeringCapabilities() {
         }
       );
 
-      // Pin the section and translate the card track horizontally as the
-      // user scrolls vertically. A hold phase at the start keeps the pinned
-      // section still for ~half a viewport of scroll before the cards begin
-      // moving — gives the eye a beat to settle on the pinned layout.
+      // Pin + horizontal translate runs only on laptop. On mobile and tablet
+      // the pin would take ~1500px of vertical scroll to pan through 5 cards
+      // at 80vw/300px — tedious — and reserving that pinSpacing shows as a
+      // tall empty gap below the cards at iPad widths. Instead, let the user
+      // swipe the rail natively via overflow-x-auto below 1280px.
+      const isDesktop = window.matchMedia("(min-width: 1280px)").matches;
+      if (!isDesktop) return;
+
       const getDistance = () =>
         Math.max(0, track.scrollWidth - window.innerWidth + 48);
       const getHold = () => window.innerHeight * 0.5;
@@ -531,7 +535,7 @@ function EngineeringCapabilities() {
   return (
     <section ref={sectionRef} className="relative overflow-hidden py-20 md:py-28">
       <Shell>
-        <div className="grid gap-6 md:grid-cols-[1.3fr_1fr] md:items-end md:gap-16">
+        <div className="grid gap-6 md:grid-cols-[1.3fr_1fr] md:items-end md:gap-16 tablet:grid-cols-1 tablet:gap-6">
           <h2 data-oem-cap-eyebrow className="heading-lg">
             ENGINEERING CAPABILITIES
           </h2>
@@ -544,15 +548,15 @@ function EngineeringCapabilities() {
         </div>
       </Shell>
 
-      <div className="relative mt-12 md:mt-16">
+      <div className="relative mt-12 overflow-x-auto md:mt-16 md:overflow-visible tablet:overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div
           ref={trackRef}
-          className="flex gap-6 pl-6 pr-6 will-change-transform md:pl-14 md:pr-14"
+          className="flex gap-6 pl-6 pr-6 will-change-transform snap-x snap-mandatory md:snap-none md:pl-14 md:pr-14"
         >
           {CAPABILITIES.map((c) => (
             <div
               key={c.title}
-              className="group flex w-[80vw] shrink-0 flex-col gap-5 rounded-card border border-white/[0.06] bg-bg-card p-6 transition-colors hover:border-white/20 md:w-[360px] lg:w-[400px]"
+              className="group flex w-[80vw] shrink-0 snap-start flex-col gap-5 rounded-card border border-white/[0.06] bg-bg-card p-6 transition-colors hover:border-white/20 md:w-[360px] md:snap-none lg:w-[400px] tablet:w-[300px] tablet:gap-4 tablet:snap-start"
             >
               <div className="aspect-[16/10] w-full overflow-hidden rounded-lg border border-white/[0.06]">
                 <div
@@ -575,6 +579,10 @@ function EngineeringCapabilities() {
               </div>
             </div>
           ))}
+          {/* Trailing spacer — browsers truncate `padding-right` on overflow-x
+              flex containers at scroll-end, so we need a real element here
+              to guarantee breathing room after the last card on mobile. */}
+          <div aria-hidden className="w-2 shrink-0 md:hidden tablet:block" />
         </div>
       </div>
     </section>
@@ -627,7 +635,7 @@ function OurProcess() {
     <section ref={sectionRef} className="py-20 md:py-28">
       <Shell>
         {/* Header row — title left, description right */}
-        <div className="grid gap-6 md:grid-cols-[1fr_1.4fr] md:items-start md:gap-16">
+        <div className="grid gap-6 md:grid-cols-[1fr_1.4fr] md:items-start md:gap-16 tablet:grid-cols-1 tablet:gap-10">
           <h2 data-oem-process-eyebrow className="heading-lg">
             OUR PROCESS
           </h2>
@@ -643,14 +651,49 @@ function OurProcess() {
           </p>
         </div>
 
-        {/* Accordion image rail — one wide active panel + narrow preview
-            slivers for every other step. Hover expands the slivers so you
-            can peek at the next step's image before clicking. Click sets a
-            new active step and the active panel's content (title, body)
-            swaps in with a cross-fade. */}
+        {/* Mobile — vertical stack of all 6 steps as cards. The sliver
+            accordion below collapses to ~30px slivers at phone widths
+            which are unusable as touch targets. */}
         <div
           data-oem-process-card
-          className="mt-12 flex h-[480px] w-full overflow-hidden rounded-card border border-white/[0.06] md:mt-16 md:h-[560px]"
+          className="mt-10 flex flex-col gap-5 md:hidden"
+        >
+          {PROCESS_STEPS.map((step) => (
+            <article
+              key={step.id}
+              className="overflow-hidden rounded-card border border-white/[0.06] bg-bg-card"
+            >
+              <div
+                className="relative aspect-[16/10] w-full"
+                style={{
+                  backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%), url('${encodeURI(step.image)}')`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              />
+              <div className="p-5">
+                <div className="flex items-baseline gap-3">
+                  <span className="font-display text-sm font-semibold tracking-[0.2em] text-white">
+                    {step.id}
+                  </span>
+                  <span className="font-display text-lg font-semibold text-white">
+                    {step.title}
+                  </span>
+                </div>
+                <p className="mt-3 text-xs leading-relaxed text-white/80">
+                  {step.body}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {/* Desktop — accordion image rail (one wide active panel + narrow
+            preview slivers for every other step). Hover expands slivers so
+            you can peek at the next step's image before clicking. */}
+        <div
+          data-oem-process-card
+          className="mt-12 hidden h-[480px] w-full overflow-hidden rounded-card border border-white/[0.06] md:mt-16 md:flex md:h-[560px]"
         >
           {PROCESS_STEPS.map((step, i) => {
             const isDisplayed = i === displayed;
@@ -743,14 +786,9 @@ function EngagementModel() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Pin the whole section while the user scrolls through all 3 models.
-      // Each card gets its own "scroll slot" where its big number counts in
-      // and the title/body reveal.
       const cards = gsap.utils.toArray<HTMLElement>("[data-oem-em-card]");
       if (!cards.length) return;
 
-      // Initial — header is immediate on-enter, cards start deep below and
-      // dim. We scrub-reveal them one at a time during the pin.
       gsap.from("[data-oem-em-eyebrow], [data-oem-em-sub]", {
         autoAlpha: 0,
         y: 24,
@@ -760,46 +798,55 @@ function EngagementModel() {
         scrollTrigger: { trigger: section, start: "top 80%" },
       });
 
-      gsap.set(cards, { autoAlpha: 0, y: 80, scale: 0.95 });
-      gsap.set("[data-oem-em-progress]", { scaleY: 0, transformOrigin: "top" });
+      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
 
-      const tl = gsap.timeline({
-        defaults: { ease: "power3.out" },
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: `+=${cards.length * 30}%`,
-          pin: true,
-          pinSpacing: true,
-          anticipatePin: 1,
-          scrub: 0.4,
-          invalidateOnRefresh: true,
-        },
-      });
+      if (isDesktop) {
+        // Desktop: pin the whole section while the user scrolls through all
+        // 3 models. Each card gets its own "scroll slot" where its reveal
+        // animates in and the previous one dims. Mobile skips this — the
+        // stacked content is taller than iPhone SE viewport, so pinning
+        // would clip the bottom cards.
+        gsap.set(cards, { autoAlpha: 0, y: 80, scale: 0.95 });
+        gsap.set("[data-oem-em-progress]", { scaleY: 0, transformOrigin: "top" });
 
-      // Progress rail grows across the full pin
-      tl.to(
-        "[data-oem-em-progress]",
-        { scaleY: 1, ease: "none", duration: cards.length },
-        0
-      );
+        const tl = gsap.timeline({
+          defaults: { ease: "power3.out" },
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: `+=${cards.length * 30}%`,
+            pin: true,
+            pinSpacing: true,
+            anticipatePin: 1,
+            scrub: 0.4,
+            invalidateOnRefresh: true,
+          },
+        });
 
-      // Each card gets its own 1-unit slot of the timeline
-      cards.forEach((card, i) => {
         tl.to(
-          card,
-          { autoAlpha: 1, y: 0, scale: 1, duration: 0.6 },
-          i
+          "[data-oem-em-progress]",
+          { scaleY: 1, ease: "none", duration: cards.length },
+          0
         );
-        // Previous card dims as the next one takes focus
-        if (i < cards.length - 1) {
-          tl.to(
-            card,
-            { autoAlpha: 0.3, scale: 0.97, duration: 0.4 },
-            i + 0.7
-          );
-        }
-      });
+
+        cards.forEach((card, i) => {
+          tl.to(card, { autoAlpha: 1, y: 0, scale: 1, duration: 0.6 }, i);
+          if (i < cards.length - 1) {
+            tl.to(card, { autoAlpha: 0.3, scale: 0.97, duration: 0.4 }, i + 0.7);
+          }
+        });
+      } else {
+        // Mobile: simple on-enter stagger. No pin, no progress rail — the
+        // rail is hidden on mobile via the `hidden md:block` class anyway.
+        gsap.from(cards, {
+          autoAlpha: 0,
+          y: 40,
+          duration: 0.7,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: { trigger: section, start: "top 80%" },
+        });
+      }
     }, section);
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 200);
@@ -812,10 +859,10 @@ function EngagementModel() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex h-screen w-full flex-col justify-center overflow-hidden pb-10 pt-24 md:pb-16 md:pt-28"
+      className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden pb-14 pt-20 md:h-screen md:pb-16 md:pt-28"
     >
       <Shell>
-        <div className="grid gap-10 md:grid-cols-[1fr_1.4fr] md:items-center md:gap-16">
+        <div className="grid gap-10 md:grid-cols-[1fr_1.4fr] md:items-center md:gap-16 tablet:grid-cols-1 tablet:gap-10">
           {/* LEFT — heading + description stacked, vertically centered against the card stack */}
           <div>
             <h2 data-oem-em-eyebrow className="heading-lg">
@@ -947,7 +994,7 @@ function WhoWeWorkWith() {
         {/* 3-column line-topped layout — no card background, no watermark */}
         <div
           data-oem-www-grid
-          className="mt-14 grid gap-10 md:mt-20 md:grid-cols-3 md:gap-12"
+          className="mt-14 grid gap-10 md:mt-20 md:grid-cols-3 md:gap-12 tablet:grid-cols-1 tablet:gap-10"
         >
           {PARTNERS.map((p) => (
             <article key={p.title} className="relative flex h-full flex-col">
@@ -1154,15 +1201,15 @@ function JustSendIt() {
     <section ref={sectionRef} id="just-send-it" className="w-full py-16 md:py-24">
       <Shell>
         <div className="overflow-hidden rounded-card border border-white/[0.08]">
-          <div className="grid md:grid-cols-[1fr_1.3fr]">
+          <div className="grid md:grid-cols-[1fr_1.3fr] tablet:grid-cols-1">
             {/* LEFT — lighter card bg; title sits lower in the column; info blocks + buttons grouped at the bottom */}
-            <div data-oem-cta-left className="flex flex-col bg-bg-card p-7 md:p-12 lg:p-16">
-              <h2 className="mt-24 font-display font-semibold normal-case tracking-normal text-white text-[52px] leading-[1.05] md:mt-40 md:text-[72px]">
+            <div data-oem-cta-left className="flex flex-col bg-bg-card p-7 md:p-12 lg:p-16 tablet:p-8">
+              <h2 className="mt-4 font-display font-semibold normal-case tracking-normal text-white text-[44px] leading-[1.05] md:mt-40 md:text-[72px] tablet:mt-6">
                 Just<br />send it.
               </h2>
 
               {/* Bottom group — bifurcation line separates heading from info blocks + buttons */}
-              <div className="mt-auto flex flex-col gap-8 pt-16">
+              <div className="mt-10 flex flex-col gap-8 md:mt-auto md:pt-16">
                 <div className="h-px w-full bg-white/15" aria-hidden />
                 <div className="grid gap-8 text-sm leading-relaxed sm:grid-cols-2 sm:gap-6 md:text-[15px]">
                   <div>
@@ -1209,7 +1256,7 @@ function JustSendIt() {
             </div>
 
             {/* RIGHT — darker form panel */}
-            <div className="bg-[#121212] p-7 md:p-12 lg:p-16">
+            <div className="bg-[#121212] p-7 md:p-12 lg:p-16 tablet:p-8">
               {state === "success" ? (
                 <div
                   data-oem-cta-form

@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
@@ -33,7 +34,21 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // Custom `tablet:` variant — a bounded media query (≥768px AND <1280px)
+    // that targets iPad mini through iPad Pro without affecting mobile or
+    // laptop. Implemented as a plugin (not a `screens` entry) so Tailwind's
+    // `min-[*]:` arbitrary variants continue to work. The `html &` wrapper
+    // bumps selector specificity by one element so `tablet:` consistently
+    // wins over `md:`/`lg:` utilities at the tablet range regardless of
+    // where Tailwind places it in the generated CSS source order.
+    plugin(({ addVariant }) => {
+      addVariant(
+        "tablet",
+        "@media (min-width: 768px) and (max-width: 1279.98px) { html & }"
+      );
+    }),
+  ],
 };
 
 export default config;

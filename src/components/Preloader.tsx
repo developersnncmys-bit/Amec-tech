@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-const MIN_DISPLAY_MS = 1400;
-const FADE_MS = 700;
+const MIN_DISPLAY_MS = 600;
+const FADE_MS = 500;
 
 export function Preloader() {
   const [phase, setPhase] = useState<"visible" | "fading" | "hidden">("visible");

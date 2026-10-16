@@ -290,7 +290,7 @@ function Hero() {
       {/* Top-center: eyebrow + main heading */}
       <div className="absolute inset-x-0 top-0 flex flex-col items-center px-6 pt-28 text-center md:pt-36">
         <AnimateIn>
-          <p className="eyebrow md:!text-[32px] md:!leading-none md:!tracking-[0.14em] md:!font-semibold md:!text-white">
+          <p className="eyebrow !text-base !tracking-[0.14em] !text-white md:!text-[32px] md:!leading-none md:!font-semibold">
             Source
           </p>
           <h1 className="mt-3 heading-xl md:!text-[68px] md:!leading-[1.06]">Hybrid Energy System</h1>
@@ -387,7 +387,7 @@ function ProductOverview() {
   return (
     <section ref={sectionRef} className="w-full py-20 md:py-28">
       <Shell>
-        <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-center md:gap-16">
+        <div className="grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-center md:gap-16 tablet:grid-cols-1 tablet:gap-10">
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-[1fr_auto_1.4fr] md:gap-x-10 md:gap-y-24">
             {/* Row 1 — Product Overview title */}
             <h2
@@ -436,16 +436,16 @@ function ProductOverview() {
             </p>
           </div>
 
-          <div className="flex items-center justify-center gap-6 md:justify-end">
+          <div className="flex items-center justify-center gap-3 md:gap-6 md:justify-end">
             <img
               src="/images/source-product1.png"
               alt="SOURCE product front"
-              className="max-h-[420px] w-auto object-contain"
+              className="max-h-[260px] w-auto flex-1 object-contain md:max-h-[420px] md:flex-initial"
             />
             <img
               src="/images/source-product2.png"
               alt="SOURCE product side"
-              className="max-h-[420px] w-auto object-contain"
+              className="max-h-[260px] w-auto flex-1 object-contain md:max-h-[420px] md:flex-initial"
             />
           </div>
         </div>
@@ -538,31 +538,37 @@ function OneEnergyEcosystem() {
       // Pin for N × 40% scroll range — one short scroll per state so the
       // user lands on the next state in a single wheel/trackpad swipe.
       // Snap smoothly glides to the target state rather than snapping harshly.
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        end: `+=${ECOSYSTEM_STATES.length * 40}%`,
-        pin: true,
-        pinSpacing: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        snap: {
-          snapTo: (value) => {
-            const n = ECOSYSTEM_STATES.length;
-            return Math.round(value * (n - 1)) / (n - 1);
+      // Mobile skips the pin: the stacked content is too tall for the viewport,
+      // so pinning would clip the image/features. On mobile, users tap the
+      // layer rows to switch states instead.
+      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+      if (isDesktop) {
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top top",
+          end: `+=${ECOSYSTEM_STATES.length * 40}%`,
+          pin: true,
+          pinSpacing: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          snap: {
+            snapTo: (value) => {
+              const n = ECOSYSTEM_STATES.length;
+              return Math.round(value * (n - 1)) / (n - 1);
+            },
+            duration: { min: 0.35, max: 0.6 },
+            delay: 0.08,
+            ease: "power2.inOut",
           },
-          duration: { min: 0.35, max: 0.6 },
-          delay: 0.08,
-          ease: "power2.inOut",
-        },
-        onUpdate: (self) => {
-          const idx = Math.min(
-            ECOSYSTEM_STATES.length - 1,
-            Math.round(self.progress * (ECOSYSTEM_STATES.length - 1))
-          );
-          setActive(idx);
-        },
-      });
+          onUpdate: (self) => {
+            const idx = Math.min(
+              ECOSYSTEM_STATES.length - 1,
+              Math.round(self.progress * (ECOSYSTEM_STATES.length - 1))
+            );
+            setActive(idx);
+          },
+        });
+      }
 
       // Header fades in on first approach.
       gsap.from("[data-oee-heading], [data-oee-sub]", {
@@ -602,16 +608,19 @@ function OneEnergyEcosystem() {
         </div>
 
         {/* 3-column grid: left layer list | centre image | right features */}
-        <div className="mt-10 grid gap-10 md:mt-14 md:grid-cols-[1fr_1.1fr_1fr] md:items-center md:gap-10 lg:gap-14">
+        <div className="mt-10 grid gap-10 md:mt-14 md:grid-cols-[1fr_1.1fr_1fr] md:items-center md:gap-10 lg:gap-14 tablet:grid-cols-1 tablet:gap-10">
           {/* LEFT — three stacked layers; each row has its own indicator segment
               on its right edge. Only the active segment is bright white. */}
-          <div className="flex flex-col gap-10 md:gap-14">
+          <div className="flex flex-col gap-10 md:gap-14 tablet:grid tablet:grid-cols-3 tablet:gap-6">
             {ECOSYSTEM_STATES.map((s, i) => {
               const isActive = i === active;
               return (
-                <div
+                <button
+                  type="button"
                   key={s.layer.title}
-                  className="relative grid grid-cols-[1fr_auto] items-start gap-6 pr-6 md:pr-8"
+                  onClick={() => setActive(i)}
+                  aria-pressed={isActive}
+                  className="relative grid grid-cols-[1fr_auto] items-start gap-6 pr-6 text-left md:pr-8"
                 >
                   <div
                     className={`transition-opacity duration-500 ${
@@ -635,7 +644,7 @@ function OneEnergyEcosystem() {
                       isActive ? "bg-white" : "bg-white/15"
                     }`}
                   />
-                </div>
+                </button>
               );
             })}
           </div>
@@ -660,7 +669,7 @@ function OneEnergyEcosystem() {
           {/* RIGHT — feature list swaps per state. `key={active}` forces a
               remount so the fade-in staggered animation plays on every
               change. */}
-          <div key={active} className="flex flex-col gap-8 md:gap-10">
+          <div key={active} className="flex flex-col gap-8 md:gap-10 tablet:grid tablet:grid-cols-3 tablet:gap-6">
             {currentFeatures.map((f, i) => (
               <div
                 key={f.title}
@@ -710,14 +719,20 @@ function SceneBand() {
     if (!pinTarget) return;
 
     const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: pinTarget,
-        start: "top top",
-        end: "+=100%",
-        pin: pinTarget,
-        pinSpacing: true,
-        anticipatePin: 1,
-      });
+      // Pin only on desktop. On mobile the section is shorter than the pin
+      // range, which leaves an empty pin-spacer strip below before the next
+      // section flows in.
+      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+      if (isDesktop) {
+        ScrollTrigger.create({
+          trigger: pinTarget,
+          start: "top top",
+          end: "+=100%",
+          pin: pinTarget,
+          pinSpacing: true,
+          anticipatePin: 1,
+        });
+      }
     }, pinTarget);
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 200);
@@ -742,16 +757,18 @@ function SceneBand() {
   return (
     <section
       ref={pinRef}
-      className="relative flex min-h-screen w-full flex-col justify-end overflow-hidden bg-[#0f0f0f]"
+      className="relative flex min-h-[75vh] w-full flex-col justify-end overflow-hidden bg-[#0f0f0f] md:min-h-screen"
     >
-      {/* Single stable img element — src swap only, no transform. */}
+      {/* Single stable img element — src swap only, no transform.
+          Mobile anchors the crop to object-bottom so the ground / SOURCE
+          device stays in frame instead of being cropped out. */}
       <img
         src={view === "morning" ? "/images/SourceMorning.png" : "/images/Sourcenight.png"}
         alt=""
         aria-hidden
         decoding="sync"
         fetchPriority="high"
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover object-bottom md:object-center"
       />
       {/* Bottom overlay — lightly darkens the ground so the toggle + caption read clearly */}
       <div
@@ -825,7 +842,7 @@ function HybridEnergyManagement() {
   return (
     <section
       ref={pinRef}
-      className="relative flex h-screen w-full flex-col overflow-hidden pb-6 pt-24 md:pb-8 md:pt-28"
+      className="relative flex min-h-screen w-full flex-col overflow-hidden pb-10 pt-20 md:h-screen md:pb-8 md:pt-28 tablet:h-auto tablet:min-h-0 tablet:pb-16 tablet:pt-20"
     >
       {/* Ambient radial glow — adds depth to the stage without added noise */}
       <div
@@ -845,7 +862,7 @@ function HybridEnergyManagement() {
             RIGHT column: big centered image hero with chips + lines + target
                          markers. No framed panel — the image floats in the
                          section background. */}
-        <div className="grid flex-1 min-h-0 gap-8 md:grid-cols-[0.9fr_1.1fr] md:gap-12">
+        <div className="grid flex-1 min-h-0 gap-8 md:grid-cols-[0.9fr_1.1fr] md:gap-12 tablet:grid-cols-1 tablet:gap-10">
           {/* LEFT — editorial content */}
           <AnimateIn className="flex min-h-0 flex-col">
             <h2 className="heading-lg">
@@ -1742,7 +1759,7 @@ function TechnicalSpecifications() {
       <Shell>
         <div className="grid gap-10 md:grid-cols-[1fr_1.4fr] md:gap-16">
           {/* Left column — title, description, CTA */}
-          <div className="md:sticky md:top-28 md:self-start">
+          <div className="md:sticky md:top-28 md:self-start tablet:static tablet:top-auto">
             <AnimateIn>
               <h2 className="heading-lg text-black">Technical details</h2>
               <p className="mt-6 max-w-md text-sm leading-relaxed text-black/60 md:text-base">
@@ -1817,7 +1834,7 @@ function ModelDimensionsAndResources() {
       <Shell>
         {/* Model Dimensions — two-column layout matching Technical Details */}
         <div className="grid gap-10 md:grid-cols-[1fr_1.4fr] md:gap-16">
-          <div className="md:sticky md:top-28 md:self-start">
+          <div className="md:sticky md:top-28 md:self-start tablet:static tablet:top-auto">
             <h2 className="heading-lg text-black">Model dimensions</h2>
             <p className="mt-6 max-w-md text-sm leading-relaxed text-black/60 md:text-base">
               Compact enough for any wall, engineered to fit in tight installations. Front and side profiles with
@@ -1836,7 +1853,7 @@ function ModelDimensionsAndResources() {
 
         {/* Resources — same two-column layout */}
         <div className="mt-16 grid gap-10 md:mt-24 md:grid-cols-[1fr_1.4fr] md:gap-16">
-          <div className="md:sticky md:top-28 md:self-start">
+          <div className="md:sticky md:top-28 md:self-start tablet:static tablet:top-auto">
             <h2 className="heading-lg text-black">Resources</h2>
             <p className="mt-6 max-w-md text-sm leading-relaxed text-black/60 md:text-base">
               Learning material, warranty policy, and datasheets — everything you need to plan, install, and support a
@@ -2059,7 +2076,7 @@ function WhereSourceWorks() {
         </AnimateIn>
 
         {/* Content row — image owns the taller height; accordion stretches to match */}
-        <div className="mt-10 grid gap-6 md:mt-20 md:grid-cols-[1.3fr_1fr] md:items-stretch md:gap-10">
+        <div className="mt-10 grid gap-6 md:mt-20 md:grid-cols-[1.3fr_1fr] md:items-stretch md:gap-10 tablet:grid-cols-1 tablet:gap-10">
           {/* Left — image container. Taller fixed height so the card has more presence. */}
           <div className="relative h-[340px] w-full overflow-hidden rounded-card border border-white/20 md:h-[400px]">
             {APPLICATIONS.map((a, i) => {
@@ -2275,9 +2292,9 @@ function FAQ() {
   return (
     <section className="py-16 md:py-24">
       <Shell>
-        <div className="grid gap-12 md:grid-cols-[1fr_1.6fr_0.8fr] md:gap-14">
+        <div className="grid gap-12 md:grid-cols-[1fr_1.6fr_0.8fr] md:gap-14 tablet:grid-cols-1 tablet:gap-10">
           {/* Left column — big heading + description */}
-          <div className="md:sticky md:top-28 md:self-start">
+          <div className="md:sticky md:top-28 md:self-start tablet:static tablet:top-auto">
             <h2 className="heading-lg">FREQUENTLY ASKED QUESTIONS</h2>
             <p className="mt-6 max-w-xs text-sm leading-relaxed text-white/70 md:text-base">
               Straightforward answers, so you can move forward with confidence.
@@ -2345,7 +2362,7 @@ function FAQ() {
           </div>
 
           {/* Right column — help block */}
-          <div className="md:sticky md:top-28 md:self-start">
+          <div className="md:sticky md:top-28 md:self-start tablet:static tablet:top-auto">
             <p className="text-sm leading-relaxed text-white/70 md:text-base">
               Still have questions? Our team is here to help.
             </p>
@@ -2386,41 +2403,41 @@ function ClosingCTA() {
       );
       gsap.set("[data-closing-bg]", { scale: 1.02 });
 
-      // One scrubbed timeline tied to the pin range — as user scrolls through
-      // the pinned section, the reveal progresses stage by stage.
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: pinTarget,
-          start: "top top",
-          end: "+=150%",
-          pin: pinTarget,
-          pinSpacing: true,
-          anticipatePin: 1,
-          scrub: 0.6,
-        },
-      });
+      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
 
-      tl.to("[data-closing-bg]", { scale: 1.1, ease: "none" }, 0);
-      tl.to(
-        "[data-closing-card]",
-        { autoAlpha: 1, y: 0, duration: 0.4, ease: "power3.out" },
-        0.05
-      );
-      tl.to(
-        "[data-closing-heading]",
-        { autoAlpha: 1, y: 0, duration: 0.35, ease: "power3.out" },
-        0.3
-      );
-      tl.to(
-        "[data-closing-sub]",
-        { autoAlpha: 1, y: 0, duration: 0.3, ease: "power3.out" },
-        0.45
-      );
-      tl.to(
-        "[data-closing-cta]",
-        { autoAlpha: 1, y: 0, duration: 0.3, ease: "power3.out" },
-        0.55
-      );
+      if (isDesktop) {
+        // Desktop: scrubbed timeline tied to the pin — as user scrolls
+        // through the pinned section, the reveal progresses stage by stage.
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: pinTarget,
+            start: "top top",
+            end: "+=150%",
+            pin: pinTarget,
+            pinSpacing: true,
+            anticipatePin: 1,
+            scrub: 0.6,
+          },
+        });
+
+        tl.to("[data-closing-bg]", { scale: 1.1, ease: "none" }, 0);
+        tl.to("[data-closing-card]", { autoAlpha: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.05);
+        tl.to("[data-closing-heading]", { autoAlpha: 1, y: 0, duration: 0.35, ease: "power3.out" }, 0.3);
+        tl.to("[data-closing-sub]", { autoAlpha: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.45);
+        tl.to("[data-closing-cta]", { autoAlpha: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.55);
+      } else {
+        // Mobile: no pin — section flows naturally into the footer. Reveal
+        // everything on enter so the content isn't stuck invisible from the
+        // gsap.set calls above.
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: pinTarget, start: "top 75%" },
+          defaults: { ease: "power3.out" },
+        });
+        tl.to("[data-closing-card]", { autoAlpha: 1, y: 0, duration: 0.6 }, 0)
+          .to("[data-closing-heading]", { autoAlpha: 1, y: 0, duration: 0.5 }, 0.15)
+          .to("[data-closing-sub]", { autoAlpha: 1, y: 0, duration: 0.5 }, 0.25)
+          .to("[data-closing-cta]", { autoAlpha: 1, y: 0, duration: 0.5 }, 0.35);
+      }
     }, pinTarget);
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 200);
@@ -2434,7 +2451,7 @@ function ClosingCTA() {
   return (
     <section
       ref={pinRef}
-      className="relative flex h-screen w-full items-end overflow-hidden bg-black"
+      className="relative flex h-[80vh] w-full items-end overflow-hidden bg-black md:h-screen"
     >
       {/* Full-bleed background image with subtle zoom */}
       <div

@@ -67,7 +67,7 @@ export function About() {
   return (
     <section
       ref={rootRef}
-      className="w-full px-6 pb-10 pt-16 md:px-14 md:pb-12 md:pt-24"
+      className="w-full px-6 pb-10 pt-16 tablet:px-8 tablet:pb-10 tablet:pt-16 md:px-14 md:pb-12 md:pt-24"
     >
       {/* Wide outer container — section is NOT constrained to a narrow column */}
       <div className="mx-auto w-full max-w-[1400px]">

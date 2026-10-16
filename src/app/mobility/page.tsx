@@ -475,9 +475,14 @@ function ConceptVehicles() {
     if (!el || !pin) return;
 
     const ctx = gsap.context(() => {
-      // Pin the whole stage (heading + slide area) as one unit so the
-      // heading, big index, and indicator dots stay visible while the user
-      // scrubs through concepts.
+      // Pin the whole stage (heading + slide area) as one unit on desktop so
+      // the heading, big index, and indicator dots stay visible while the
+      // user scrubs through concepts. On mobile we render all 4 concepts
+      // stacked (see JSX below) — pinning there would clip the body + bullets
+      // out of the viewport.
+      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+      if (!isDesktop) return;
+
       ScrollTrigger.create({
         trigger: pin,
         start: "top top",
@@ -514,32 +519,108 @@ function ConceptVehicles() {
 
   return (
     <section ref={sectionRef} className="w-full">
-      <div ref={pinRef} className="w-full py-12 md:py-16">
+      {/* Mobile — all 4 concepts stacked vertically. No pin, no toggle; user
+          scrolls naturally through everything. Hidden on md+ where the desktop
+          pinned version takes over. */}
+      <div className="w-full py-10 md:hidden">
+        <Shell>
+          <div>
+            <h2 className="heading-lg">CONCEPT VEHICLES</h2>
+            <p className="mt-3 text-base leading-relaxed text-[#FFFFFF8C]">
+              {CONCEPT_INTRO}
+            </p>
+          </div>
+
+          <div className="mt-10 flex flex-col gap-14">
+            {CONCEPTS.map((c, i) => {
+              const twoColBullets = c.focus.length >= 6;
+              return (
+                <article key={c.id}>
+                  <div className="flex items-center gap-4">
+                    <span
+                      aria-hidden
+                      className="font-display text-[40px] font-semibold leading-none text-white"
+                    >
+                      {c.id}
+                    </span>
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/50">
+                      Concept {i + 1} of {CONCEPTS.length}
+                    </span>
+                  </div>
+
+                  <div className="relative mt-5 aspect-[16/9] w-full overflow-hidden rounded-xl bg-bg-card">
+                    <Image
+                      src={c.image}
+                      alt={c.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+
+                  <h3 className="mt-5 font-display text-xl font-semibold text-white">
+                    {c.title}
+                  </h3>
+                  <p className="mt-3 text-base leading-relaxed text-[#FFFFFF8C]">
+                    {c.body}
+                  </p>
+
+                  <p className="mt-6 font-display text-xs font-semibold uppercase tracking-[0.22em] text-white">
+                    {c.bulletLabel}
+                  </p>
+                  <ul
+                    className={`mt-3 ${
+                      twoColBullets
+                        ? "grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2"
+                        : "flex flex-col gap-3"
+                    }`}
+                  >
+                    {c.focus.map((f, j) => (
+                      <li
+                        key={j}
+                        className="flex gap-3 text-sm leading-relaxed text-[#FFFFFF8C]"
+                      >
+                        <span
+                          aria-hidden
+                          className="mt-[9px] inline-block h-1 w-1 shrink-0 rounded-full bg-[#FFFFFF8C]"
+                        />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              );
+            })}
+          </div>
+        </Shell>
+      </div>
+
+      {/* Desktop — pinned scrubbed showcase (hidden on mobile). */}
+      <div ref={pinRef} className="hidden w-full py-6 md:block md:py-16">
         <Shell>
           {/* Header + big index + indicator dots — same container as the
               slide stage below so the heading's left edge lines up with the
               image's left edge. */}
-          <div className="grid gap-6 md:grid-cols-[1.4fr_auto] md:items-end md:gap-10">
+          <div className="grid gap-6 md:grid-cols-[1.4fr_auto] md:items-end md:gap-10 tablet:grid-cols-1 tablet:gap-6">
             <div>
               <h2 className="heading-lg">CONCEPT VEHICLES</h2>
               <p className="mt-3 max-w-2xl text-base leading-relaxed text-[#FFFFFF8C] md:text-[17px] md:leading-[1.6]">
                 {CONCEPT_INTRO}
               </p>
             </div>
-            <div className="flex items-end gap-5">
+            <div className="flex items-center gap-4 md:items-end md:gap-5">
               <div
                 aria-hidden
-                className="font-display text-[64px] font-semibold leading-none text-white md:text-[96px]"
+                className="font-display text-[40px] font-semibold leading-none text-white md:text-[96px]"
               >
                 {current.id}
               </div>
-              {/* Vertical page indicator — one dash per concept */}
-              <div className="flex flex-col items-center gap-1.5 pb-2 md:pb-4">
+              {/* Page indicator — horizontal row on mobile, vertical column on md+ */}
+              <div className="flex flex-row items-center gap-1.5 md:flex-col md:pb-4">
                 {CONCEPTS.map((_, i) => (
                   <span
                     key={i}
                     aria-hidden
-                    className={`h-5 w-[2px] rounded-full transition-colors duration-300 ${
+                    className={`h-[2px] w-5 rounded-full transition-colors duration-300 md:h-5 md:w-[2px] ${
                       i === activeIndex ? "bg-white" : "bg-white/20"
                     }`}
                   />
@@ -552,9 +633,9 @@ function ConceptVehicles() {
               always right. All four concepts render in the same grid cells
               and are toggled via opacity so the layout is identical for 01,
               02, 03, and 04. */}
-          <div className="relative mt-8 grid gap-8 md:mt-10 md:grid-cols-2 md:gap-12">
+          <div className="relative mt-8 grid gap-8 md:mt-10 md:grid-cols-2 md:gap-12 tablet:grid-cols-1 tablet:gap-8">
             {/* LEFT column — image */}
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-bg-card md:aspect-auto md:min-h-[420px]">
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-bg-card md:aspect-auto md:min-h-[420px]">
               {CONCEPTS.map((c, i) => (
                 <div
                   key={c.id}
@@ -693,27 +774,44 @@ function CareersInMobility() {
               </p>
               <div className="mt-4 flex flex-col divide-y divide-white/10 border-y border-white/10">
                 {g.roles.map((r) => (
-                  <div
-                    key={r.title}
-                    data-career-row
-                    className="grid grid-cols-1 items-center gap-3 py-5 md:grid-cols-[1.6fr_1fr_1fr_auto] md:gap-6"
-                  >
-                    <span className="font-display text-sm font-semibold text-white md:text-[15px]">
-                      {r.title}
-                    </span>
-                    <span className="text-xs text-white md:text-[13px]">
-                      {r.type}
-                    </span>
-                    <span className="text-xs text-white md:text-[13px]">
-                      {r.location}
-                    </span>
-                    <Link
-                      href="/careers"
-                      className="inline-flex items-center gap-2 justify-self-start text-xs text-white transition-colors hover:text-white/80 md:justify-self-end md:text-[13px]"
-                    >
-                      Learn More
-                      <ArrowRight className="h-3 w-3" />
-                    </Link>
+                  <div key={r.title} data-career-row>
+                    {/* Mobile — title + Learn More on row 1, type · location
+                        on row 2. Keeps each role compact and scannable. */}
+                    <div className="flex flex-col gap-1.5 py-5 md:hidden">
+                      <div className="flex items-start justify-between gap-4">
+                        <span className="font-display text-sm font-semibold text-white">
+                          {r.title}
+                        </span>
+                        <Link
+                          href="/careers"
+                          className="inline-flex shrink-0 items-center gap-1 text-xs text-white/70 transition-colors hover:text-white"
+                        >
+                          Learn More
+                          <ArrowRight className="h-3 w-3" />
+                        </Link>
+                      </div>
+                      <p className="text-xs text-white/60">
+                        {r.type}
+                        <span aria-hidden className="mx-1.5 text-white/30">·</span>
+                        {r.location}
+                      </p>
+                    </div>
+
+                    {/* Desktop — 4-col grid */}
+                    <div className="hidden md:grid md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-center md:gap-6 md:py-5">
+                      <span className="font-display text-[15px] font-semibold text-white">
+                        {r.title}
+                      </span>
+                      <span className="text-[13px] text-white">{r.type}</span>
+                      <span className="text-[13px] text-white">{r.location}</span>
+                      <Link
+                        href="/careers"
+                        className="inline-flex items-center gap-2 justify-self-end text-[13px] text-white transition-colors hover:text-white/80"
+                      >
+                        Learn More
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
                   </div>
                 ))}
               </div>

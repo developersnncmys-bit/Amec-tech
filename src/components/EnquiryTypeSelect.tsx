@@ -144,7 +144,7 @@ export function EnquiryTypeSelect({
         onClick={() => setOpen((v) => !v)}
         onKeyDown={onTriggerKey}
       >
-        <span className={value ? "text-white" : "text-white/40"}>
+        <span className={`min-w-0 truncate ${value ? "text-white" : "text-white/40"}`}>
           {value || placeholder}
         </span>
         <svg

@@ -144,7 +144,7 @@ export default function TermsOfServicePage() {
           {SECTIONS.map((s) => (
             <div
               key={s.title}
-              className="grid gap-6 border-b border-white/[0.06] py-10 last:border-b-0 md:grid-cols-[280px_1fr] md:gap-16 md:py-12"
+              className="grid gap-6 border-b border-white/[0.06] py-10 last:border-b-0 md:grid-cols-[280px_1fr] md:gap-16 tablet:grid-cols-1 tablet:gap-4 md:py-12"
             >
               <h2 className="font-display text-base font-semibold text-white md:text-lg">
                 {s.title}
@@ -166,7 +166,7 @@ export default function TermsOfServicePage() {
           ))}
 
           {/* Contact Us — mirrors the two-column layout but with the address grid */}
-          <div className="grid gap-6 border-t border-white/[0.06] pt-10 md:grid-cols-[280px_1fr] md:gap-16 md:pt-12">
+          <div className="grid gap-6 border-t border-white/[0.06] pt-10 md:grid-cols-[280px_1fr] md:gap-16 tablet:grid-cols-1 tablet:gap-4 md:pt-12">
             <h2 className="font-display text-base font-semibold text-white md:text-lg">
               Contact Us
             </h2>

@@ -105,7 +105,7 @@ export function Hero() {
             />
           </div>
 
-          <div className="absolute inset-0 flex flex-col items-start justify-end gap-6 px-6 pb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-10 md:px-14 md:pb-14 lg:gap-16 lg:px-24 lg:pb-16">
+          <div className="absolute inset-0 flex flex-col items-start justify-end gap-6 px-6 pb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-10 tablet:px-8 tablet:pb-12 md:px-14 md:pb-14 lg:gap-16 lg:px-24 lg:pb-16">
             <div className="max-w-full text-left sm:max-w-[70%]">
               <p
                 data-hero-eyebrow
@@ -134,7 +134,7 @@ export function Hero() {
           </div>
       </div>
 
-      <div id="technology-intro" className="shell mt-16 mb-6 md:mt-24 md:mb-10">
+      <div id="technology-intro" className="shell mt-16 mb-6 tablet:mt-16 tablet:mb-8 md:mt-24 md:mb-10">
         <p
           data-intro
           className="mx-auto max-w-4xl text-left font-display text-lg leading-relaxed text-white/70 md:text-[22px]"

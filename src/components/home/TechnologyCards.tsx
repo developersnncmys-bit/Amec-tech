@@ -79,8 +79,8 @@ export function TechnologyCards() {
   }, []);
 
   return (
-    <section id="nav-reveal" ref={sectionRef} className="pb-16 pt-8 md:pb-24 md:pt-12">
-      <div className="mx-auto w-full max-w-[1600px] px-6 md:px-14">
+    <section id="nav-reveal" ref={sectionRef} className="pb-16 pt-8 tablet:pb-20 tablet:pt-10 md:pb-24 md:pt-12">
+      <div className="mx-auto w-full max-w-[1600px] px-6 tablet:px-8 md:px-14">
         {/* Header: heading spans cols 1-2, description sits in col 3.
             Uses the same 3-col grid as the cards below so text edges align
             perfectly with card 1 (left) and card 3 (right). */}
@@ -97,7 +97,7 @@ export function TechnologyCards() {
         </div>
 
         {/* Cards — revealed during pin */}
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+        <div className="mt-8 grid gap-6 md:grid-cols-3 tablet:grid-cols-2">
           {CARDS.map((card) => (
             <Link
               key={card.title}

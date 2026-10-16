@@ -390,7 +390,7 @@ function Hero() {
         />
       </div>
 
-      <div className="relative flex h-full w-full flex-col justify-center px-6 pb-40 md:px-14 md:pb-24 lg:pb-14">
+      <div className="relative flex h-full w-full flex-col justify-center px-6 pb-40 pt-24 md:px-14 md:pb-24 md:pt-0 lg:pb-14">
         {/* Vertically-centered left-aligned title + sub */}
         <div className="max-w-3xl">
           <h1
@@ -413,8 +413,8 @@ function Hero() {
           </p>
         </div>
 
-        {/* Bottom chips row — evenly spread across full width with icons */}
-        <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-x-4 gap-y-3 border-t border-white/[0.08] px-6 py-5 md:gap-x-6 md:py-6 lg:justify-between lg:gap-x-6 lg:px-14 lg:py-7">
+        {/* Bottom chips row — 2×2 grid on mobile for even alignment, flex row on md+ */}
+        <div className="absolute inset-x-0 bottom-0 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-white/[0.08] px-6 py-5 md:flex md:flex-wrap md:items-center md:gap-x-6 md:py-6 lg:justify-between lg:gap-x-6 lg:px-14 lg:py-7">
           {HERO_CHIPS.map((c) => (
             <span
               key={c.label}
@@ -575,7 +575,7 @@ function WhyOutperforms() {
 
         <div
           data-why-grid
-          className="relative mt-6 grid gap-5 md:mt-10 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-10"
+          className="relative mt-6 grid gap-5 md:mt-10 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-10 tablet:grid-cols-1 tablet:gap-5"
         >
           {/* Left column — tiles 0, 2 */}
           <div className="flex flex-col gap-5">
@@ -586,7 +586,7 @@ function WhyOutperforms() {
 
           {/* Center image + expanding rings */}
           <div className="order-first flex items-center justify-center md:order-none">
-            <div className="relative flex h-[360px] w-[360px] items-center justify-center md:h-[480px] md:w-[480px]">
+            <div className="relative flex h-[240px] w-[240px] items-center justify-center md:h-[480px] md:w-[480px]">
               {/* Concentric rings — radiate outward from behind the image */}
               {[0.4, 0.6, 0.8, 1].map((s, i) => (
                 <span
@@ -601,7 +601,7 @@ function WhyOutperforms() {
                 data-why-image
                 src="/Early warning/Image (AMEC Hub Device).png"
                 alt="AMEC Early Warning device"
-                className="relative max-h-[320px] w-auto object-contain md:max-h-[400px]"
+                className="relative max-h-[200px] w-auto object-contain md:max-h-[400px]"
               />
             </div>
           </div>
@@ -1183,7 +1183,7 @@ function MeshNetwork() {
 
           <div
             data-tr-grid
-            className="mt-5 grid gap-3 md:mt-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-4"
+            className="mt-5 grid gap-3 md:mt-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-4 tablet:grid-cols-2"
           >
             {RESULT_CHIPS.map((c) => (
               <div
@@ -1251,35 +1251,31 @@ function WhyThisMatters() {
         scrollTrigger: { trigger: el, start: "top 85%" },
       });
 
-      // Scrubbed reveal timeline — heading, rule, quote, and 4 points
-      // animate as the section passes through the viewport (no pin, no spacer).
+      // Reveal timeline — plays once as the section enters view. Fast parallel
+      // reveal so fast mobile scrolling doesn't blow past the section before
+      // the content is visible.
       const tl = gsap.timeline({
         defaults: { ease: "power3.out" },
         scrollTrigger: {
           trigger: el,
-          start: "top 70%",
-          end: "bottom 30%",
-          scrub: 0.5,
-          invalidateOnRefresh: true,
+          start: "top 85%",
+          toggleActions: "play none none reverse",
         },
       });
 
-      tl.to("[data-wtm-heading]", { autoAlpha: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.6 })
-        .to("[data-wtm-rule]", { scaleX: 1, duration: 0.5, ease: "power3.inOut" }, "-=0.2")
-        .to("[data-wtm-quote]", { autoAlpha: 1, x: 0, duration: 0.6 }, "-=0.15");
-
-      // Points reveal one-by-one after the quote
-      points.forEach((p) => {
-        tl.to(
-          p.querySelector("[data-wtm-dot]"),
-          { autoAlpha: 1, scale: 1, duration: 0.4, ease: "back.out(2)" },
-          ">-0.1"
-        ).to(
-          p.querySelector("[data-wtm-text]"),
-          { autoAlpha: 1, x: 0, duration: 0.5 },
-          "<+0.1"
+      tl.to("[data-wtm-heading]", { autoAlpha: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.5 })
+        .to("[data-wtm-rule]", { scaleX: 1, duration: 0.4, ease: "power3.inOut" }, "-=0.3")
+        .to("[data-wtm-quote]", { autoAlpha: 1, x: 0, duration: 0.5 }, "-=0.25")
+        .to(
+          points.map((p) => p.querySelector("[data-wtm-dot]")),
+          { autoAlpha: 1, scale: 1, duration: 0.3, stagger: 0.08, ease: "back.out(2)" },
+          "-=0.25"
+        )
+        .to(
+          points.map((p) => p.querySelector("[data-wtm-text]")),
+          { autoAlpha: 1, x: 0, duration: 0.35, stagger: 0.08 },
+          "<+0.08"
         );
-      });
     }, el);
 
     return () => ctx.revert();
@@ -1951,7 +1947,7 @@ function Testimonials() {
 
         <div
           data-ts-grid
-          className="mt-12 grid gap-5 md:mt-16 md:grid-cols-3 md:gap-6"
+          className="mt-12 grid gap-5 md:mt-16 md:grid-cols-3 md:gap-6 tablet:grid-cols-2 tablet:gap-5"
         >
           {TESTIMONIALS.map((t) => (
             <article

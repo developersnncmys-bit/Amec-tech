@@ -138,7 +138,7 @@ export function CTA() {
               "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 55%)",
           }}
         />
-        <div className="relative flex flex-col items-center gap-8 px-6 text-center md:px-14">
+        <div className="relative flex flex-col items-center gap-8 px-6 text-center tablet:px-8 md:px-14">
           <h2 className="heading-xl max-w-6xl">
             {HEADING_WORDS.map((word, i) => (
               <Fragment key={i}>
@@ -162,7 +162,7 @@ export function CTA() {
       </div>
 
       {/* Bottom cards */}
-      <div className="mx-auto mt-6 w-full max-w-[1600px] px-6 md:px-14">
+      <div className="mx-auto mt-6 w-full max-w-[1600px] px-6 tablet:px-8 md:px-14">
         <div data-cta-cards className="grid gap-6 md:grid-cols-2">
           <Link
             href="/contact"

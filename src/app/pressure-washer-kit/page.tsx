@@ -595,7 +595,7 @@ function StatsRow() {
   return (
     <section ref={sectionRef} className="w-full border-y border-white/[0.06] py-12 md:py-16">
       <Shell>
-        <div className="grid grid-cols-2 gap-y-10 text-center md:grid-cols-4 md:gap-6">
+        <div className="grid grid-cols-2 gap-y-10 text-center md:grid-cols-4 md:gap-6 tablet:grid-cols-2 tablet:gap-6">
           {HERO_STATS.map((s) => (
             <div key={s.topLabel} data-pw-stat className="flex flex-col items-center">
               <span
@@ -658,7 +658,7 @@ function ProfessionalCleaning() {
   return (
     <section ref={sectionRef} className="w-full pb-10 pt-20 md:pb-14 md:pt-24">
       <Shell>
-        <div className="grid gap-10 md:grid-cols-[1.7fr_1fr] md:gap-6">
+        <div className="grid gap-10 md:grid-cols-[1.7fr_1fr] md:gap-6 tablet:grid-cols-1 tablet:gap-10">
           <h2 data-pc-heading className="heading-lg">
             PROFESSIONAL CLEANING
             <br />
@@ -709,7 +709,7 @@ function UseCaseImages() {
   return (
     <section ref={sectionRef} className="w-full pb-16 pt-0 md:pb-20">
       <Shell>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.7fr_1fr] md:gap-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.7fr_1fr] md:gap-6 tablet:grid-cols-1 tablet:gap-4">
           {USE_CASE_IMAGES.map((img, i) => (
             <div
               key={i}
@@ -813,14 +813,14 @@ function UltimatePerformance() {
           </p>
         </div>
 
-        <div data-up-grid className="mt-10 grid gap-8 md:mt-12 md:grid-cols-[1fr_1.1fr_1fr] md:items-center md:gap-8">
+        <div data-up-grid className="mt-10 grid gap-8 md:mt-12 md:grid-cols-[1fr_1.1fr_1fr] md:items-center md:gap-8 tablet:grid-cols-1 tablet:gap-8">
           {/* LEFT features — title/body right-aligned, icon on the far right */}
           <div className="flex flex-col gap-6 md:gap-7">
             {PERF_FEATURES_LEFT.map((f) => (
               <div
                 key={f.title}
                 data-up-item-left
-                className="flex flex-row-reverse items-start justify-end gap-3 text-left md:flex-row md:justify-end md:gap-4 md:text-right"
+                className="flex flex-row-reverse items-start gap-3 text-left md:flex-row md:justify-end md:gap-4 md:text-right"
               >
                 <div className="min-w-0">
                   <h3 className="font-display text-xs font-semibold uppercase tracking-wide text-white md:text-sm lg:text-base">
@@ -920,9 +920,9 @@ function WashWithoutLimits() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full overflow-hidden md:h-screen md:min-h-[720px]"
+      className="relative w-full overflow-hidden md:h-screen md:min-h-[720px] tablet:h-auto tablet:min-h-[520px]"
     >
-      <div className="grid h-full grid-cols-1 gap-4 md:grid-cols-[1fr_1.2fr_1fr] md:gap-0">
+      <div className="grid h-full grid-cols-1 gap-4 md:grid-cols-[1fr_1.2fr_1fr] md:gap-0 tablet:grid-cols-[1fr_1.2fr_1fr] tablet:gap-0">
         <div
           data-wwl-image
           className="relative aspect-[3/4] bg-bg-card md:aspect-auto md:h-full"
@@ -1064,14 +1064,14 @@ function FourSteps() {
   return (
     <section
       ref={sectionRef}
-      className="relative isolate flex h-screen w-full flex-col overflow-hidden bg-[#0a0a0a]"
+      className="relative isolate flex h-screen w-full flex-col overflow-hidden bg-[#0a0a0a] tablet:h-[720px]"
     >
       {/* Background image spanning the entire section */}
       <div className="absolute inset-0">
         <img
           src="/Pressure-washerkit/bg-image.png"
           alt="Aquaforce 1400 on a workbench"
-          className="absolute inset-0 h-full w-full object-contain object-center"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
         <div
           aria-hidden
@@ -1084,7 +1084,7 @@ function FourSteps() {
       </div>
 
       {/* Top-centered heading */}
-      <div className="relative z-10 flex flex-col items-center px-6 pt-6 text-center md:pt-10">
+      <div className="relative z-10 flex flex-col items-center px-6 pt-6 text-center md:pt-10 tablet:pt-4">
         <p
           data-fs-eyebrow
           className="font-display font-semibold uppercase tracking-normal text-white"
@@ -1110,7 +1110,7 @@ function FourSteps() {
               aria-hidden
               className="absolute inset-x-0 top-0 h-px bg-white/20"
             />
-            <div className="grid gap-10 md:grid-cols-4 md:gap-8">
+            <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8 tablet:grid-cols-2 tablet:gap-8">
               {STEPS.map((s) => (
                 <div key={s.id} data-fs-step className="flex items-start gap-4">
                   <span
@@ -1209,7 +1209,7 @@ function DiscoverUseCase() {
         </div>
 
         {/* 3-column: tabs | image | description */}
-        <div className="mt-12 grid gap-10 md:mt-16 md:grid-cols-[0.8fr_2fr_0.9fr] md:items-center md:gap-10">
+        <div className="mt-12 grid gap-10 md:mt-16 md:grid-cols-[0.8fr_2fr_0.9fr] md:items-center md:gap-10 tablet:grid-cols-1 tablet:gap-10">
           {/* LEFT — tab list */}
           <div data-du-tabs className="flex flex-col gap-5 md:gap-6">
             {USE_CASES.map((uc) => {
@@ -1357,7 +1357,7 @@ function WhatMakesDifferent() {
         {/* Two cards side-by-side — Conventional (dim) vs Aquaforce (elevated) */}
         <div
           data-wmd-cards
-          className="mt-14 grid gap-5 md:mt-20 md:grid-cols-2 md:gap-6"
+          className="mt-14 grid gap-5 md:mt-20 md:grid-cols-2 md:gap-6 tablet:grid-cols-1 tablet:gap-5"
         >
           {/* CONVENTIONAL — muted, dim treatment */}
           <article
@@ -1411,13 +1411,13 @@ function WhatMakesDifferent() {
               Recommended
             </span>
 
-            <div className="mb-7 flex items-center gap-3 border-b border-white/[0.12] pb-6 md:mb-8 md:pb-7">
+            <div className="mb-7 flex items-center gap-3 border-b border-white/[0.12] pb-6 pr-28 md:mb-8 md:pb-7 md:pr-0">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/30 bg-white text-black">
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <path d="m5 12 5 5L20 7" />
                 </svg>
               </span>
-              <div>
+              <div className="min-w-0">
                 <p className="font-display text-lg font-semibold uppercase tracking-wide text-white md:text-xl">
                   Aquaforce 1400
                 </p>
@@ -1703,7 +1703,7 @@ function Testimonials() {
             soften the entry/exit edges. */}
         <div data-ts-grid className="relative mt-10 md:mt-14">
           <div
-            className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 tablet:grid-cols-1 tablet:gap-5"
             style={{
               WebkitMaskImage:
                 "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",

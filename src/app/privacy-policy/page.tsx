@@ -176,8 +176,8 @@ export default function PrivacyPolicyPage() {
       </section>
 
       {/* Content — single column, flowing paragraphs */}
-      <section className="w-full px-6 py-16 md:px-14 md:py-24">
-        <div className="mx-auto w-full max-w-[900px] space-y-6 text-sm leading-relaxed text-[#FFFFFF8C] md:text-[15px]">
+      <section className="w-full px-6 py-16 md:px-14 md:py-24 tablet:px-8 tablet:py-20">
+        <div className="mx-auto w-full max-w-[900px] space-y-6 text-sm leading-relaxed text-[#FFFFFF8C] md:text-[15px] tablet:max-w-[720px]">
           {BLOCKS.map((b, i) => {
             if (b.type === "h3") {
               return (
